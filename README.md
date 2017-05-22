@@ -8,7 +8,7 @@ Research into that matter indicated that these vulnerabilities are not exclusive
 
 This paper presents an analysis, including exploitation details, of various Java open-source marshalling libraries that allow(ed) for unmarshalling of arbitrary, attacker supplied, types and shows that no matter how this process is performed and what implicit constraints are in place it is prone to similar exploitation techniques.
 
-Full paper is at [marshalsec.pdf](https://www.github.com/mbechler/marshalsec/blob/marshalsec.pdf?raw=true)
+Full paper is at [marshalsec.pdf](https://www.github.com/mbechler/marshalsec/blob/master/marshalsec.pdf?raw=true)
 
 ## Disclaimer
 
