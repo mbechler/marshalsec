@@ -47,7 +47,8 @@ public enum GadgetType {
     C3P0WrapperConnPool(C3P0WrapperConnPool.class),
     C3P0RefDataSource(C3P0RefDataSource.class),
     JdbcRowSet(JdbcRowSet.class),
-    ScriptEngine(ScriptEngine.class);
+    ScriptEngine(ScriptEngine.class),
+    ResourceGadget(ResourceGadget.class);
 
     private Class<? extends Gadget> clazz;
 

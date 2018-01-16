@@ -251,6 +251,13 @@
 			<artifactId>commons-configuration</artifactId>
 			<version>1.10</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-plus -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-plus</artifactId>
+			<version>9.4.8.v20171121</version>
+		</dependency>
 	</dependencies>
 
 	<build>
