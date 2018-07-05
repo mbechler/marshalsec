@@ -58,7 +58,7 @@ public class TemplatesUtil {
 
 
     public static Object createTemplatesImpl ( final String[] args ) throws Exception {
-        if ( Boolean.parseBoolean(System.getProperty("properXalan", "false")) ) {
+        if ( Boolean.parseBoolean(System.getProperty("upstreamXalan", "false")) ) {
             return createTemplatesImpl(
                 args,
                 Class.forName("org.apache.xalan.xsltc.trax.TemplatesImpl"),
