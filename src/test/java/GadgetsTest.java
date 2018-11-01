@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import marshalsec.BlazeDSAMF0;
 import marshalsec.BlazeDSAMF3;
+import marshalsec.BlazeDSAMF3AM;
 import marshalsec.BlazeDSAMFX;
 import marshalsec.Burlap;
 import marshalsec.Hessian;
@@ -58,6 +59,12 @@ public class GadgetsTest {
     @Test
     public void blazeDSAMF0 () throws Exception {
         runTests(new BlazeDSAMF0());
+    }
+
+
+    @Test
+    public void blazeDSAMF3AM () throws Exception {
+        runTests(new BlazeDSAMF3AM());
     }
 
 
