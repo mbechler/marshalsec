@@ -114,6 +114,8 @@ public class SideEffectSecurityManager extends SecurityManager {
             return true;
         case "getProtectionDomain":
             return true;
+        case "accessSystemModules":
+            return true;
         }
 
         return false;
