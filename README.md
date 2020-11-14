@@ -19,7 +19,7 @@ All information and code is provided solely for educational purposes and/or test
 Java 8 required. Build using maven ```mvn clean package -DskipTests```. Run as
 
 ```shell
-java -cp target/marshalsec-0.0.1-SNAPSHOT-all.jar marshalsec.<Marshaller> [-a] [-v] [-t] [<gadget_type> [<arguments...>]]
+java -cp target/marshalsec-[VERSION]-SNAPSHOT-all.jar marshalsec.<Marshaller> [-a] [-v] [-t] [<gadget_type> [<arguments...>]]
 ```
 
 where
@@ -92,7 +92,7 @@ The service to load is currently hardcoded to *javax.script.ScriptEngineFactory*
 * Run a JNDI reference redirector service pointing to that codebase -
   two implementations are included: *marshalsec.jndi.LDAPRefServer* and *RMIRefServer*.
 
-      ```java -cp target/marshalsec-0.0.1-SNAPSHOT-all.jar marshalsec.jndi.(LDAP|RMI)RefServer <codebase>#<class> [<port>]```
+      ```java -cp target/marshalsec-[VERSION]-SNAPSHOT-all.jar marshalsec.jndi.(LDAP|RMI)RefServer <codebase>#<class> [<port>]```
 
 * Use (ldap|rmi)://*host*:*port*/obj as the *jndiUrl*, pointing to that service's listening address.
 
