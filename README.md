@@ -1,5 +1,9 @@
 # Java Unmarshaller Security - Turning your data into code execution
 
+If you came here for Log4Shell/CVE-2021-44228, you may want to read about 
+the exploitation vectors and affected Java runtime versions:
+<https://mbechler.github.io/2021/12/10/PSA_Log4Shell_JNDI_Injection/>
+
 ## Paper
 
 It's been more than two years since Chris Frohoff and Garbriel Lawrence have presented their research into Java object deserialization vulnerabilities ultimately resulting in what can be readily described as the biggest wave of remote code execution bugs in Java history.
