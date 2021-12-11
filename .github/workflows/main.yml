@@ -1,0 +1,23 @@
+name: Build marshalsec
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          java-version: '17.0.1+12'
+          distribution: 'adopt'
+      - run: mvn clean package -DskipTests
+      - run: mkdir staging && cp target/*.jar staging
+      - uses: actions/upload-artifact@v2
+        with:
+          name: marshalsec-compiled
+          path: staging
