@@ -95,9 +95,9 @@ The service to load is currently hardcoded to *javax.script.ScriptEngineFactory*
 * Set up a remote codebase, same as remote classloading.
 * Run a JNDI reference redirector service pointing to that codebase -
   two implementations are included: *marshalsec.jndi.LDAPRefServer* and *RMIRefServer*.
-
-      ```java -cp target/marshalsec-[VERSION]-SNAPSHOT-all.jar marshalsec.jndi.(LDAP|RMI)RefServer <codebase>#<class> [<port>]```
-
+  ```shell
+  java -cp target/marshalsec-[VERSION]-SNAPSHOT-all.jar marshalsec.jndi.(LDAP|RMI)RefServer <codebase>#<class> [<port>]
+  ```
 * Use (ldap|rmi)://*host*:*port*/obj as the *jndiUrl*, pointing to that service's listening address.
 
 ## Running tests
