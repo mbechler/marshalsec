@@ -166,7 +166,7 @@ public final class JDKUtil {
             new URL(url)
         });
         Reflections.setFieldValue(ucl, "parent", null);
-        Reflections.setFieldValue(ucl, "domains", new HashSet<>());
+        Reflections.trySetFieldValue(ucl, "domains", new HashSet<>());
         Reflections.setFieldValue(ucl, "defaultDomain", null);
         Reflections.setFieldValue(ucl, "acc", null);
 

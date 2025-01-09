@@ -34,6 +34,14 @@ public class Reflections {
         field.set(obj, value);
     }
 
+    public static void trySetFieldValue ( final Object obj, final String fieldName, final Object value ) throws Exception {
+    	try {
+		setFieldValue(obj, fieldName, value);
+	} catch ( ReflectiveOperationException e ) {
+		// ignore
+	}
+    }
+
 
     public static Object getFieldValue ( final Object obj, final String fieldName ) throws Exception {
         final Field field = getField(obj.getClass(), fieldName);
